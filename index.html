@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reflections on XAI · ELLIS UnConference 2026</title>
+<meta name="description" content="Reflections on XAI: Are we focusing on the right fundamental challenges? A session at the ELLIS UnConference 2026, 8 December 2026, Paris.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --surface: #ffffff;
+    --text: #1d1f24;
+    --muted: #5d6270;
+    --line: #e4e1da;
+    --accent: #1f4e8c;
+    --accent-soft: #e8eef7;
+    --max: 860px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --surface: #1b1e23;
+      --text: #e8e6e1;
+      --muted: #a2a6b0;
+      --line: #2c3037;
+      --accent: #8db4ea;
+      --accent-soft: #1f2a3a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.65 Inter, system-ui, -apple-system, sans-serif;
+  }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; gap: 20px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  nav a:hover { color: var(--accent); }
+
+  header { padding: 72px 0 48px; border-bottom: 1px solid var(--line); }
+  .hero { display: flex; align-items: center; gap: 32px; }
+  .hero-text { flex: 1; min-width: 0; }
+  .sketch { flex: 0 0 240px; width: 240px; height: auto; }
+  .sketch .ink { stroke: var(--text); }
+  .sketch .ink-fill { fill: var(--text); }
+  .sketch .accent { stroke: var(--accent); }
+  .sketch .accent-fill { fill: var(--accent); }
+  .sketch .faint { stroke: var(--muted); stroke-dasharray: 4 4; }
+  .sketch .faint-fill { fill: var(--muted); }
+  @media (max-width: 720px) {
+    .hero { flex-direction: column-reverse; align-items: flex-start; gap: 20px; }
+    .sketch { flex-basis: auto; width: 170px; }
+  }
+  .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
+  h1 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 600; font-size: clamp(36px, 6vw, 54px); line-height: 1.1; margin: 0;
+  }
+  .subtitle {
+    font-family: "Source Serif 4", Georgia, serif; font-style: italic;
+    font-size: clamp(20px, 3vw, 25px); color: var(--muted); margin: 10px 0 28px;
+  }
+  .facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 0; padding: 0; list-style: none; font-size: 15px; }
+  .facts strong { font-weight: 600; }
+
+  .cfp-banner {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px;
+    margin-top: 32px; padding: 18px 22px; border-radius: 10px;
+    background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    color: var(--text); text-decoration: none;
+  }
+  .cfp-banner:hover { border-color: var(--accent); }
+  .cfp-cta {
+    background: var(--accent); color: var(--bg); font-weight: 600; font-size: 15px;
+    padding: 8px 16px; border-radius: 6px; white-space: nowrap;
+  }
+  section { padding: 52px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: 0; }
+  h2 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600; font-size: 28px; margin: 0 0 20px; }
+  h3 { font-size: 16px; font-weight: 600; margin: 28px 0 8px; }
+  p { margin: 0 0 14px; }
+
+  .questions { margin: 18px 0 0; padding: 0; list-style: none; counter-reset: q; }
+  .questions li {
+    counter-increment: q; position: relative;
+    padding: 12px 16px 12px 52px; margin-bottom: 8px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  }
+  .questions li::before {
+    content: counter(q); position: absolute; left: 16px; top: 12px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 13px; font-weight: 600; text-align: center; line-height: 24px;
+  }
+
+  .people { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+  .people .person { flex: 0 1 calc((100% - 3 * 14px) / 4); min-width: 160px; }
+  .people.five .person { flex-basis: calc((100% - 4 * 14px) / 5); min-width: 150px; padding: 18px 10px; }
+  .people.five .person img { width: 104px; height: 104px; }
+  .person { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 18px; text-align: center; }
+  .person img {
+    display: block; width: 120px; height: 120px; margin: 0 auto 14px;
+    border-radius: 50%; object-fit: cover; background: var(--line);
+  }
+  .person .name { font-weight: 600; display: block; margin-bottom: 2px; }
+  .person .name a { color: var(--text); text-decoration: none; }
+  .person .name a:hover { color: var(--accent); }
+  .person .aff { color: var(--muted); font-size: 14px; line-height: 1.45; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { width: 130px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 16px; }
+  tr:last-child td { border-bottom: 0; }
+  .note { font-size: 14px; color: var(--muted); margin-top: 12px; }
+
+  .callout { background: var(--accent-soft); border-radius: 10px; padding: 16px 20px; margin: 20px 0; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  footer { padding: 36px 0 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 520px) {
+    header { padding: 48px 0 36px; }
+    td:first-child { width: 96px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#about">About</a>
+    <a href="#speakers">Speakers</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#posters">Call for Posters</a>
+    <a href="#organizers">Organizers</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap hero">
+    <div class="hero-text">
+    <p class="eyebrow">Session at the ELLIS UnConference 2026</p>
+    <h1>Reflections on XAI</h1>
+    <p class="subtitle">Are we focusing on the right fundamental challenges?</p>
+    <ul class="facts">
+      <li><strong>When:</strong> 8 December 2026, 14:00–16:00 (posters 16:30–18:30)</li>
+      <li><strong>Where:</strong> <a href="https://www.google.com/maps/search/?api=1&amp;query=Palais+des+Congr%C3%A8s+de+Paris%2C+2+Place+de+la+Porte+Maillot%2C+75017+Paris">Palais des Congrès de Paris</a></li>
+      <li><strong>Part of:</strong> <a href="https://ellis-unconference.github.io/">ELLIS UnConference 2026</a></li>
+    </ul>
+    </div>
+    <svg class="sketch" viewBox="0 0 260 200" role="img" aria-label="Hand-drawn sketch of a little neural-network robot looking at its reflection in a mirror">
+      <defs>
+        <filter id="wobble">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/>
+          <feDisplacementMap in="SourceGraphic" scale="3"/>
+        </filter>
+      </defs>
+      <g filter="url(#wobble)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4">
+        <!-- robot -->
+        <g class="ink">
+          <path d="M72 52 L74 38"/><circle cx="74.5" cy="34" r="4"/>
+          <path d="M46 54 Q44 52 47 51 L102 52 Q106 53 105 57 L104 98 Q104 102 100 102 L48 101 Q44 101 44 97 Z"/>
+          <path d="M40 108 L110 107 Q114 108 114 112 L113 172 Q113 176 109 176 L42 177 Q37 177 38 172 Z"/>
+          <path d="M38 124 Q24 132 22 150"/><path d="M114 124 Q132 118 146 104"/>
+          <path d="M55 177 L54 190 M95 177 L96 190"/>
+          <path d="M66 86 Q75 92 84 86"/>
+        </g>
+        <circle class="ink-fill" cx="62" cy="72" r="3.6"/><circle class="ink-fill" cx="88" cy="72" r="3.6"/>
+        <!-- little network on its chest -->
+        <g class="accent" stroke-width="1.6">
+          <path d="M56 124 L76 134 L96 128 M56 124 L76 156 M56 144 L76 134 M56 144 L76 156 L96 150 M56 162 L76 156 M76 134 L96 150 M76 156 L96 128 M56 162 L76 134"/>
+        </g>
+        <g class="accent-fill">
+          <circle cx="56" cy="124" r="4"/><circle cx="56" cy="144" r="4"/><circle cx="56" cy="162" r="4"/>
+          <circle cx="76" cy="134" r="4"/><circle cx="76" cy="156" r="4"/>
+          <circle cx="96" cy="128" r="4"/><circle cx="96" cy="150" r="4"/>
+        </g>
+        <!-- mirror -->
+        <g class="ink">
+          <ellipse cx="196" cy="88" rx="34" ry="44"/>
+          <path d="M196 132 L195 176 M174 182 Q196 174 218 182"/>
+        </g>
+        <g class="accent" stroke-width="1.8" opacity=".85">
+          <path d="M176 68 Q180 56 190 52"/><path d="M174 82 Q175 76 178 72"/>
+        </g>
+        <!-- reflection: same face, slightly puzzled -->
+        <g class="faint" stroke-width="1.8">
+          <path d="M180 74 L212 74 Q214 75 214 78 L213 104 Q213 107 210 107 L182 107 Q179 107 179 104 Z"/>
+          <path d="M190 98 Q196 95 202 99"/>
+        </g>
+        <circle class="faint-fill" cx="189" cy="86" r="2.4"/><circle class="faint-fill" cx="203" cy="86" r="2.4"/>
+        <!-- question mark + sparkles -->
+        <g class="accent" stroke-width="2.6">
+          <path d="M126 30 Q128 16 140 17 Q151 19 149 29 Q147 36 139 39 Q135 41 135 49"/>
+        </g>
+        <circle class="accent-fill" cx="135" cy="58" r="2.6"/>
+        <g class="ink" stroke-width="1.8">
+          <path d="M238 34 L238 48 M231 41 L245 41"/>
+          <path d="M152 70 L152 78 M148 74 L156 74"/>
+          <path d="M18 40 L18 50 M13 45 L23 45"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<main class="wrap">
+
+<a class="cfp-banner" href="#posters">
+  <span><strong>Call for posters is open.</strong> Submit an accepted paper or a 4-page extended abstract.</span>
+  <span class="cfp-cta">See the call &rarr;</span>
+</a>
+
+<section id="about">
+  <h2>About</h2>
+  <p>
+    Explainable AI (XAI) is now deployed across a wide range of settings, including high-stakes domains in which
+    misleading explanations can cause real harm. Explanations are required by law to safeguard the rights of individuals
+    subject to algorithmic decision-making, and they inform decisions in sensitive areas such as medicine. It is thus
+    essential that explanation methods reliably fulfill their intended purpose rather than offering convincing but
+    incorrect explanations.
+  </p>
+  <p>
+    Over the past ten years, XAI has grown into a substantial research field, yet much recent work appears increasingly
+    focused on incremental technical questions, sometimes at the expense of the field's original ambition: making modern
+    AI systems meaningfully understandable, trustworthy, and useful in real-world decision making. At the same time, the
+    AI landscape has changed dramatically with the rise of foundation models and LLMs. That several position papers at
+    ICML 2026 independently ask whether XAI is having real impact shows how timely this discussion is. It is also almost
+    ten years since Finale Doshi-Velez and Been Kim's call for a more rigorous science of interpretability.
+  </p>
+  <p>
+    This session is an intermezzo for the XAI community: leading researchers critically assess what XAI has achieved in
+    practice, where it has fallen short, and which fundamental challenges should define its next phase. We cover
+    different paradigms, from classic explainability approaches to chain-of-thought and mechanistic interpretability,
+    and perspectives ranging from machine learning theory and practice to philosophy of science.
+  </p>
+  <p>The session is guided by the following overarching questions:</p>
+  <ol class="questions">
+    <li>Has explainability research drifted towards self-imposed, incremental questions instead of its original ambitious goals?</li>
+    <li>Is XAI keeping up with the rapid development of ML, and specifically of foundation models?</li>
+    <li>Are there clear success stories, and what is preventing more of them?</li>
+    <li>After 5–10 years of work, where should we redirect our efforts?</li>
+  </ol>
+</section>
+
+<section id="speakers">
+  <h2>Invited Speakers</h2>
+  <div class="people">
+    <div class="person">
+      <img src="img/freiesleben.jpg" alt="Timo Freiesleben" loading="lazy">
+      <span class="name"><a href="https://www.philosophie.lmu.de/mcmp/en/people/contact-page/timo-freiesleben-ed672017.html">Timo Freiesleben</a></span>
+      <span class="aff">LMU Munich</span>
+    </div>
+    <div class="person">
+      <img src="img/orgad.jpg" alt="Hadas Orgad" loading="lazy">
+      <span class="name"><a href="https://orgadhadas.github.io/">Hadas Orgad</a></span>
+      <span class="aff">Kempner Institute, Harvard University</span>
+    </div>
+    <div class="person">
+      <img src="img/vanerven.jpg" alt="Tim van Erven" loading="lazy">
+      <span class="name"><a href="https://www.timvanerven.nl/">Tim van Erven</a></span>
+      <span class="aff">University of Amsterdam</span>
+    </div>
+    <div class="person">
+      <img src="img/semenova.jpg" alt="Lesia Semenova" loading="lazy">
+      <span class="name"><a href="https://lesiasemenova.github.io/">Lesia Semenova</a></span>
+      <span class="aff">Rutgers University</span>
+    </div>
+  </div>
+</section>
+
+<section id="schedule">
+  <h2>Schedule</h2>
+  <p>Each talk is 20 minutes, followed by 10 minutes of discussion and Q&amp;A.</p>
+  <table>
+    <tr><td>14:00–14:05</td><td>Opening remarks: framing and the overarching questions</td></tr>
+    <tr><td>14:05–14:30</td><td>Timo Freiesleben</td></tr>
+    <tr><td>14:30–15:00</td><td>Hadas Orgad</td></tr>
+    <tr><td>15:00–15:30</td><td>Tim van Erven</td></tr>
+    <tr><td>15:30–16:00</td><td>Lesia Semenova, followed by closing remarks</td></tr>
+    <tr><td>16:30–18:30</td><td>Poster session (part of the ELLIS UnConference poster session)</td></tr>
+  </table>
+  <p class="note">Talk titles and the room will be announced later.</p>
+</section>
+
+<section id="posters">
+  <h2>Call for Posters</h2>
+  <p>
+    We invite poster contributions on work that fits the theme of the session: critical perspectives on explainability
+    and interpretability, its foundations, its practical impact, and its future directions. Any explanation paradigm and
+    data modality is welcome, from feature attributions and counterfactuals to chain-of-thought and mechanistic
+    interpretability, and from theory to practice and philosophy.
+  </p>
+
+  <h3>What you can submit</h3>
+  <ul>
+    <li><strong>A paper already accepted elsewhere</strong> (a conference, journal, or workshop) that fits the theme, or</li>
+    <li><strong>An extended abstract</strong> of up to 4 pages (excluding references). Work in progress is welcome.</li>
+  </ul>
+
+  <h3>Selection</h3>
+  <p>
+    Submissions are not fully reviewed. We briefly check that each contribution fits the theme of the session.
+    Poster spots are limited, so if we receive more submissions than we have spots, we will select among them.
+    Contributions are non-archival.
+  </p>
+
+  <h3>How to submit</h3>
+  <div class="callout">
+    <p><strong>Submission form:</strong> <!-- TODO: add link --> link coming soon.</p>
+    <p><strong>Deadline:</strong> <!-- TODO --> TBA &nbsp;·&nbsp; <strong>Notification:</strong> <!-- TODO --> TBA</p>
+  </div>
+  <p class="note">
+    Poster presenters need to register for the ELLIS UnConference through the
+    <a href="https://ellisunconference2026.dakini-pco.com">official registration form</a> and print their own posters.
+    Papers accepted at NeurIPS 2026 cannot be presented in the UnConference poster session.
+  </p>
+</section>
+
+<section id="organizers">
+  <h2>Organizers</h2>
+  <div class="people five">
+    <div class="person">
+      <img src="img/thiessen.jpg" alt="Maximilian Thiessen" loading="lazy">
+      <span class="name"><a href="https://maxthiessen.github.io">Maximilian Thiessen</a></span>
+      <span class="aff">University of Tübingen</span>
+    </div>
+    <div class="person">
+      <img src="img/esposito.jpg" alt="Emmanuel Esposito" loading="lazy">
+      <span class="name"><a href="https://emmanuelesposito.it">Emmanuel Esposito</a></span>
+      <span class="aff">University of Milan</span>
+    </div>
+    <div class="person">
+      <img src="img/koenig.jpg" alt="Gunnar König" loading="lazy">
+      <span class="name"><a href="https://gunnarkoenig.com">Gunnar König</a></span>
+      <span class="aff">University of Tübingen</span>
+    </div>
+    <div class="person">
+      <img src="img/luxburg.jpg" alt="Ulrike von Luxburg" loading="lazy">
+      <span class="name"><a href="https://www.tml.cs.uni-tuebingen.de/team/luxburg/index.php">Ulrike von Luxburg</a></span>
+      <span class="aff">University of Tübingen</span>
+    </div>
+    <div class="person">
+      <img src="img/cesa-bianchi.jpg" alt="Nicolò Cesa-Bianchi" loading="lazy">
+      <span class="name"><a href="https://cesa-bianchi.di.unimi.it/">Nicolò Cesa-Bianchi</a></span>
+      <span class="aff">University of Milan</span>
+    </div>
+  </div>
+  <p class="note" style="margin-top: 20px;">
+    Four of us previously organized the workshop
+    <a href="https://sites.google.com/view/theory-of-xai-workshop">Theory of Explainable Machine Learning</a>
+    at the ELLIS UnConference / EurIPS 2025 in Copenhagen; this session is its follow-up.
+  </p>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>
+    For questions about the session or the call for posters, please contact Maximilian Thiessen at
+    <a href="mailto:maximilian.thiessen@uni-tuebingen.de">maximilian.thiessen@uni-tuebingen.de</a>.
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Reflections on XAI · a session at the <a href="https://ellis-unconference.github.io/">ELLIS UnConference 2026</a>, Paris
+  </div>
+</footer>
+
+</body>
+</html>
