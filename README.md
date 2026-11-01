@@ -12,6 +12,5 @@ The site lives in the repository `reflectionsonxai/reflectionsonxai.github.io` a
 
 Search `index.html` for `TODO`:
 
-- submission form link
-- poster deadline and notification date
+- poster notification date
 - talk titles and the room
